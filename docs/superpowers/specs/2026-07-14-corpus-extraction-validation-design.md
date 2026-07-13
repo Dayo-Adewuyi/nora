@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-14
 
-**Status:** Draft for written-spec review
+**Status:** Approved for implementation
 
 **Scope:** 2024 CHEW, JCHEW, and CHO text and illustrated Standing Orders
 
