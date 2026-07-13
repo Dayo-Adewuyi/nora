@@ -1,0 +1,33 @@
+.worktrees/
+node_modules/
+.pnpm-store/
+target/
+dist/
+.vite/
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# Local project and planning documents
+*.md
+docs/
+
+apps/desktop/src-tauri/icons/*
+!apps/desktop/src-tauri/icons/icon.png
+apps/desktop/src-tauri/gen/
+
+# Large or derived clinical/model artifacts
+corpus/raw/*
+!corpus/raw/.gitkeep
+corpus/derived/*
+!corpus/derived/.gitkeep
+models/*
+!models/.gitkeep
+
+# Local secrets and runtime state
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

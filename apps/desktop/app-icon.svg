@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">CHEW Companion placeholder mark</title>
+  <rect width="512" height="512" rx="112" fill="#176b47"/>
+  <path d="M256 88 392 144v104c0 88-55 150-136 184-81-34-136-96-136-184V144l136-56Z" fill="#edf8f1"/>
+  <path d="M226 170h60v56h56v60h-56v56h-60v-56h-56v-60h56v-56Z" fill="#176b47"/>
+</svg>

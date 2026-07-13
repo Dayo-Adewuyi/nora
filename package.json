@@ -1,0 +1,18 @@
+{
+  "name": "chew-companion",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.7.0",
+  "engines": { "node": ">=24.18.0" },
+  "scripts": {
+    "dev": "pnpm --filter @chew/desktop dev",
+    "build:web": "pnpm --filter @chew/desktop build:web",
+    "test": "pnpm -r --if-present test && cargo test --workspace",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "lint": "pnpm -r --if-present lint && cargo clippy --workspace --all-targets --all-features -- -D warnings",
+    "format:check": "pnpm -r --if-present format:check && cargo fmt --all -- --check",
+    "cargo:check": "cargo check --workspace --all-targets",
+    "cargo:test": "cargo test --workspace",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm format:check && pnpm build:web && pnpm cargo:check"
+  }
+}
