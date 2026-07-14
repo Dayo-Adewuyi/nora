@@ -36,4 +36,6 @@ pub enum CorpusError {
     },
     #[error("could not parse {field} from tool output")]
     ToolOutput { field: &'static str },
+    #[error("invalid extraction output: {0}")]
+    InvalidExtraction(String),
 }

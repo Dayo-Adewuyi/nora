@@ -1,9 +1,10 @@
 use std::{
+    fs,
     path::{Path, PathBuf},
     process::{Command, Output},
 };
 
-use crate::CorpusError;
+use crate::{parse_bbox_layout, BoundingPage, CorpusError};
 
 #[derive(Debug, Clone)]
 pub struct PopplerToolchain {
@@ -19,6 +20,12 @@ pub struct PdfMetadata {
     pub encrypted: bool,
     pub file_size: u64,
     pub pdf_version: String,
+}
+
+#[derive(Debug)]
+pub struct RawExtraction {
+    pub layout_pages: Vec<String>,
+    pub bounding_pages: Vec<BoundingPage>,
 }
 
 impl PopplerToolchain {
@@ -55,6 +62,64 @@ impl PopplerToolchain {
                 .parse()
                 .map_err(|_| CorpusError::ToolOutput { field: "File size" })?,
             pdf_version: value(&stdout, "PDF version:")?.to_owned(),
+        })
+    }
+
+    pub fn extract(&self, path: &Path, output_dir: &Path) -> Result<RawExtraction, CorpusError> {
+        let metadata = self.pdf_metadata(path)?;
+        let layout_path = output_dir.join("layout.txt");
+        let bbox_path = output_dir.join("bbox.xhtml");
+        let first = "1".to_owned();
+        let last = metadata.pages.to_string();
+        let pdf = path.to_string_lossy().into_owned();
+        let layout = layout_path.to_string_lossy().into_owned();
+        let bbox = bbox_path.to_string_lossy().into_owned();
+        run(
+            &self.pdftotext,
+            &[
+                "-f", &first, "-l", &last, "-layout", "-enc", "UTF-8", "-eol", "unix", &pdf,
+                &layout,
+            ],
+        )?;
+        run(
+            &self.pdftotext,
+            &[
+                "-f",
+                &first,
+                "-l",
+                &last,
+                "-bbox-layout",
+                "-enc",
+                "UTF-8",
+                "-eol",
+                "unix",
+                &pdf,
+                &bbox,
+            ],
+        )?;
+        let layout_text = fs::read_to_string(&layout_path).map_err(|source| CorpusError::Read {
+            path: layout_path,
+            source,
+        })?;
+        let mut layout_pages: Vec<String> = layout_text.split('\x0c').map(str::to_owned).collect();
+        if layout_pages.last().is_some_and(String::is_empty) {
+            layout_pages.pop();
+        }
+        let bbox_file = fs::File::open(&bbox_path).map_err(|source| CorpusError::Read {
+            path: bbox_path,
+            source,
+        })?;
+        let bounding_pages = parse_bbox_layout(bbox_file)?;
+        if layout_pages.len() != metadata.pages as usize
+            || bounding_pages.len() != metadata.pages as usize
+        {
+            return Err(CorpusError::InvalidExtraction(
+                "Poppler page count mismatch".into(),
+            ));
+        }
+        Ok(RawExtraction {
+            layout_pages,
+            bounding_pages,
         })
     }
 }

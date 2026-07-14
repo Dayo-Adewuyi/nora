@@ -1,12 +1,16 @@
+mod bbox;
 mod config;
 mod error;
 mod manifest;
+mod page;
 mod toolchain;
 
+pub use bbox::{parse_bbox_layout, BoundingPage, TextBlock, TextLine, Word};
 pub use config::{PipelineConfig, SourcePair};
 pub use error::CorpusError;
 pub use manifest::{Representation, SourceCadre, SourceManifest, VerifiedSource};
-pub use toolchain::{PdfMetadata, PopplerToolchain};
+pub use page::{build_page_records, ExtractionWarning, PageRecord};
+pub use toolchain::{PdfMetadata, PopplerToolchain, RawExtraction};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CertificationStatus {
