@@ -37,6 +37,22 @@ impl PipelineConfig {
         Ok(config)
     }
 
+    pub(crate) fn manifests(
+        &self,
+        repo_root: &Path,
+    ) -> Result<Vec<(SourceCadre, SourceManifest, SourceManifest)>, CorpusError> {
+        self.pairs
+            .iter()
+            .map(|pair| {
+                Ok((
+                    pair.cadre,
+                    load_manifest(repo_root, &pair.text)?,
+                    load_manifest(repo_root, &pair.illustrated)?,
+                ))
+            })
+            .collect()
+    }
+
     fn validate(&self, repo_root: &Path) -> Result<(), CorpusError> {
         if self.schema_version != 1 {
             return Err(CorpusError::InvalidConfig(

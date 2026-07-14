@@ -7,6 +7,11 @@ pub enum CorpusError {
         path: PathBuf,
         source: std::io::Error,
     },
+    #[error("failed to write {path}: {source}")]
+    Write {
+        path: PathBuf,
+        source: std::io::Error,
+    },
     #[error("invalid JSON in {path}: {source}")]
     Json {
         path: PathBuf,

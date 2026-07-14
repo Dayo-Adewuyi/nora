@@ -6,6 +6,8 @@ mod error;
 mod heading;
 mod manifest;
 mod page;
+mod pipeline;
+mod report;
 mod review;
 mod toolchain;
 
@@ -27,6 +29,10 @@ pub use heading::{
 };
 pub use manifest::{Representation, SourceCadre, SourceManifest, VerifiedSource};
 pub use page::{build_page_records, ExtractionWarning, PageRecord};
+pub use pipeline::{PipelineRunner, VerificationReport};
+pub use report::{
+    semantic_artifact_sha256, write_json, write_jsonl, CadreReport, RunReport, RunSourceSummary,
+};
 pub use review::{
     apply_reviews, CandidateReview, DoseReviewRecord, ReviewApplication, ReviewDecision,
 };
