@@ -1,5 +1,6 @@
 mod bbox;
 mod config;
+mod dose;
 mod error;
 mod heading;
 mod manifest;
@@ -8,6 +9,10 @@ mod toolchain;
 
 pub use bbox::{parse_bbox_layout, BoundingPage, TextBlock, TextLine, Word};
 pub use config::{PipelineConfig, SourcePair};
+pub use dose::{
+    detect_dose_like_pages, group_dose_candidates, validate_dose_coverage, ClinicalReviewStatus,
+    ComparisonStatus, DoseCandidate, DoseLikePage, DosePageDismissal, DoseSignal,
+};
 pub use error::CorpusError;
 pub use heading::{
     extract_headings, extract_toc_references, validate_heading_hierarchy,
