@@ -142,7 +142,7 @@ fn rect(start: &BytesStart<'_>) -> Result<(f32, f32, f32, f32), CorpusError> {
         number(start, b"xMax")?,
         number(start, b"yMax")?,
     );
-    if result.0 < 0.0 || result.1 < 0.0 || result.2 < result.0 || result.3 < result.1 {
+    if result.2 < result.0 || result.3 < result.1 {
         return Err(CorpusError::InvalidExtraction(
             "invalid bounding box".into(),
         ));
@@ -170,7 +170,7 @@ fn number(start: &BytesStart<'_>, key: &[u8]) -> Result<f32, CorpusError> {
         .map_err(|error| CorpusError::InvalidExtraction(error.to_string()))?
         .parse::<f32>()
         .map_err(|error| CorpusError::InvalidExtraction(error.to_string()))?;
-    if !parsed.is_finite() || parsed < 0.0 {
+    if !parsed.is_finite() {
         return Err(CorpusError::InvalidExtraction("invalid coordinate".into()));
     }
     Ok(parsed)

@@ -71,3 +71,18 @@ fn changed_hash_is_stale_and_conflicting_records_are_blocking() {
         ClinicalReviewStatus::Conflict
     );
 }
+
+#[test]
+fn exact_hash_with_wrong_source_pair_is_blocking() {
+    let mut wrong_pair = review(&"a".repeat(64), ReviewDecision::Approved);
+    wrong_pair.text_source_id = "jchew-2024-text".into();
+    wrong_pair.illustrated_source_id = "jchew-2024-illustrated".into();
+
+    let application = apply_reviews(&[candidate()], &[wrong_pair]);
+
+    assert_eq!(
+        application.candidates[0].status,
+        ClinicalReviewStatus::Conflict
+    );
+    assert!(application.issues[0].blocking);
+}

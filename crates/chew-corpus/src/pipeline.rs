@@ -126,6 +126,10 @@ impl PipelineRunner {
     }
 
     fn build_stage(&self, stage: &Path, pairs: &[VerifiedPair]) -> Result<RunReport, CorpusError> {
+        fs::write(stage.join(".gitkeep"), []).map_err(|source| CorpusError::Write {
+            path: stage.join(".gitkeep"),
+            source,
+        })?;
         let reviews = load_review_records(&self.repo_root.join("corpus/reviews/doses"))?;
         let mut sources = Vec::new();
         let mut comparisons = Vec::new();
@@ -444,7 +448,10 @@ fn artifact_bytes(root: &Path) -> Result<Vec<(String, Vec<u8>)>, CorpusError> {
             let child = entry.path();
             if child.is_dir() {
                 visit(root, &child, output)?;
-            } else if child.file_name().is_some_and(|name| name != "run.json") {
+            } else if child
+                .file_name()
+                .is_some_and(|name| name != "run.json" && name != ".gitkeep")
+            {
                 let relative = child
                     .strip_prefix(root)
                     .expect("artifact is under stage")

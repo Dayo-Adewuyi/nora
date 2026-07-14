@@ -22,8 +22,15 @@ fn builds_page_records_with_physical_and_printed_pages() {
 }
 
 #[test]
-fn rejects_negative_bounding_boxes() {
-    let invalid = BBOX.replacen("xMin=\"10\"", "xMin=\"-1\"", 1);
+fn preserves_poppler_boxes_that_extend_left_of_the_page() {
+    let outside_page = BBOX.replacen("xMin=\"10\"", "xMin=\"-0.289818\"", 1);
+    let pages = parse_bbox_layout(Cursor::new(outside_page)).unwrap();
+    assert_eq!(pages[0].blocks[0].x_min, -0.289818);
+}
+
+#[test]
+fn rejects_inverted_bounding_boxes() {
+    let invalid = BBOX.replacen("xMax=\"100\"", "xMax=\"-1\"", 1);
     assert!(parse_bbox_layout(Cursor::new(invalid)).is_err());
 }
 

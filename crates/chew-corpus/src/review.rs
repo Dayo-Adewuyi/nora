@@ -63,7 +63,9 @@ pub fn apply_reviews(
                 }
             } else {
                 let decisions: HashSet<_> = exact.iter().map(|record| record.decision).collect();
-                if decisions.len() != 1 || exact.iter().any(|record| !valid_record(record)) {
+                if decisions.len() != 1
+                    || exact.iter().any(|record| !valid_record(record, candidate))
+                {
                     issues.push(issue(
                         "conflicting_clinical_review",
                         &candidate.candidate_id,
@@ -87,14 +89,18 @@ pub fn apply_reviews(
     ReviewApplication { candidates, issues }
 }
 
-fn valid_record(record: &DoseReviewRecord) -> bool {
+fn valid_record(record: &DoseReviewRecord, candidate: &DoseCandidate) -> bool {
+    let illustrated_source_id = candidate
+        .source_id
+        .strip_suffix("-text")
+        .map(|prefix| format!("{prefix}-illustrated"));
     record.schema_version == 1
         && !record.reviewer.trim().is_empty()
         && !record.notes.trim().is_empty()
         && record.reviewed_at.len() == 10
         && record.content_hash.len() == 64
-        && !record.text_source_id.is_empty()
-        && !record.illustrated_source_id.is_empty()
+        && record.text_source_id == candidate.source_id
+        && illustrated_source_id.as_deref() == Some(record.illustrated_source_id.as_str())
 }
 fn issue(code: &str, id: &str) -> ValidationIssue {
     ValidationIssue {
