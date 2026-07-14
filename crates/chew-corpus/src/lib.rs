@@ -1,6 +1,7 @@
 mod bbox;
 mod config;
 mod error;
+mod heading;
 mod manifest;
 mod page;
 mod toolchain;
@@ -8,6 +9,11 @@ mod toolchain;
 pub use bbox::{parse_bbox_layout, BoundingPage, TextBlock, TextLine, Word};
 pub use config::{PipelineConfig, SourcePair};
 pub use error::CorpusError;
+pub use heading::{
+    extract_headings, extract_toc_references, validate_heading_hierarchy,
+    validate_heading_references, HeadingLevel, HeadingRecord, PageReferenceResult, TocReference,
+    ValidationIssue,
+};
 pub use manifest::{Representation, SourceCadre, SourceManifest, VerifiedSource};
 pub use page::{build_page_records, ExtractionWarning, PageRecord};
 pub use toolchain::{PdfMetadata, PopplerToolchain, RawExtraction};
