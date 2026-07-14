@@ -6,6 +6,7 @@ mod error;
 mod heading;
 mod manifest;
 mod page;
+mod review;
 mod toolchain;
 
 pub use bbox::{parse_bbox_layout, BoundingPage, TextBlock, TextLine, Word};
@@ -26,6 +27,9 @@ pub use heading::{
 };
 pub use manifest::{Representation, SourceCadre, SourceManifest, VerifiedSource};
 pub use page::{build_page_records, ExtractionWarning, PageRecord};
+pub use review::{
+    apply_reviews, CandidateReview, DoseReviewRecord, ReviewApplication, ReviewDecision,
+};
 pub use toolchain::{PdfMetadata, PopplerToolchain, RawExtraction};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
