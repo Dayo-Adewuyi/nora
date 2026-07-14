@@ -1,4 +1,5 @@
 mod bbox;
+mod comparison;
 mod config;
 mod dose;
 mod error;
@@ -8,6 +9,10 @@ mod page;
 mod toolchain;
 
 pub use bbox::{parse_bbox_layout, BoundingPage, TextBlock, TextLine, Word};
+pub use comparison::{
+    align_headings, compare_candidates, normalize_layout_text, protected_tokens, AlignmentStatus,
+    CandidateComparison, HeadingAlignment, ProtectedToken,
+};
 pub use config::{PipelineConfig, SourcePair};
 pub use dose::{
     detect_dose_like_pages, group_dose_candidates, validate_dose_coverage, ClinicalReviewStatus,
