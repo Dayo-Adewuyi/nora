@@ -1,3 +1,25 @@
+mod config;
+mod manifest;
+
+pub use config::{PipelineConfig, SourcePair};
+pub use manifest::{Representation, SourceCadre, SourceManifest};
+
+#[derive(Debug, thiserror::Error)]
+pub enum CorpusError {
+    #[error("failed to read {path}: {source}")]
+    Read {
+        path: std::path::PathBuf,
+        source: std::io::Error,
+    },
+    #[error("invalid JSON in {path}: {source}")]
+    Json {
+        path: std::path::PathBuf,
+        source: serde_json::Error,
+    },
+    #[error("invalid pipeline configuration: {0}")]
+    InvalidConfig(String),
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CertificationStatus {
     ReferenceOnly,
